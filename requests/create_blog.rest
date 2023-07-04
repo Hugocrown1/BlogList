@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "goofy ahh blog",
+    "title": "Deep Work",
     "author": "Paulo Coelho",
     "url": "www.lulxd.com",
     "likes": 2
