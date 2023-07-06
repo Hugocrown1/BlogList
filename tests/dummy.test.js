@@ -1,5 +1,6 @@
 const listHelper = require('../utils/list_helper')
 
+
 const blogs = [
     {
       _id: "5a422a851b54a676234d17f7",
@@ -117,4 +118,52 @@ describe('favorite blog', () => {
         const result = listHelper.favoriteBlog(emptyList)
         expect(result).toEqual(null)
     })
+})
+
+describe('author with most blogs', () => {
+  test('of a big list', () => {
+    const result = listHelper.mostBlogs(blogs)
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3
+    })
+  })
+
+  test('of a list with one blog', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      blogs: 1
+    })
+  })
+
+  test('of an empty list', () => {
+    const emptyList = []
+    const result = listHelper.mostBlogs(emptyList)
+    expect(result).toEqual(null)
+  })
+})
+
+describe('author with most likes', () => {
+  test('of a big list', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual({
+      author: "Edsger W. Dijkstra",
+      likes: 17
+    })
+  })
+
+  test('of a list with one blog', () => {
+    const result = listHelper.mostLikes(listWithOneBlog)
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    })
+  })
+
+  test('of an empty list', () => {
+    const emptyList = []
+    const result = listHelper.mostLikes(emptyList)
+    expect(result).toEqual(null)
+  })
 })
