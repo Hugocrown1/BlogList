@@ -4,7 +4,7 @@
   "description": "blog list proyect",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "dev": "nodemon index.js"
   },
   "author": "Hugo Corona",
@@ -15,5 +15,11 @@
     "mongodb": "^5.6.0",
     "mongoose": "^7.3.1",
     "nodemon": "^2.0.22"
+  },
+  "devDependencies": {
+    "jest": "^29.6.0"
+  },
+  "jest":{
+    "testEnvironment": "node"
   }
 }
