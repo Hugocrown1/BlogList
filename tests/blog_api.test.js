@@ -10,35 +10,35 @@ const api = supertest(app)
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  const blogObjects = helper.initialBlogs.forEach(async (blog) => new Blog(blog))
+  const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
 })
 
+//excercise 4.8
 test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
   
-  
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
-  
-  test('a specific blog is within the returned blogs', async () => {
-    const response = await api.get('/api/blogs')
-  
-  
-    const contents = response.body.map(r => r.title)
-    expect(contents).toContain(
-      'Deep Work'
-    )
-  })
 
-  test('a valid blog can be added', async () => {
+//excercise 4.9
+test('the blogs identifier property is called id', async () => {
+  const response = await api.get('/api/blogs')
+
+  response.body.forEach((blog) => {
+    expect(blog.id).toBeDefined()
+  })
+})
+
+//excercise 4.10
+test('a valid blog can be added', async () => {
     const newBlog = {
-      title: 'async/await simplifies making async calls',
+      title: 'valid blog',
       author: 'Zlatan Ibrahimovic',
       url: 'www.zlatangod.com',
       likes: 55
-  }
+ }
   
     await api
       .post('/api/blogs')
@@ -53,27 +53,65 @@ test('all blogs are returned', async () => {
     const contents = blogsAtEnd.map(n => n.title)
   
     expect(contents).toContain(
-      'async/await simplifies making async calls'
+      'valid blog'
     )
   })
 
-  test('blog without title is not added', async () => {
-    const newBlog = {
-      
-      author: 'Compayaso',
-      url: 'www.wordle.com',
-      likes: 66
-    }
-  
-    await api
+  //excercise 4.11
+test('likes property is 0 by default', async () => {
+  const newBlog = {
+    title: 'Cristiano the goat',
+    author: 'Will Smith',
+    url: 'www.factos.com'
+  }
+
+  await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  const likes = blogsAtEnd.map(n => n.likes)
+
+  expect(likes[likes.length - 1]).toEqual(0)
+
+
+
+})
+
+//excercise 4.12
+test('blog without title and url is not added', async () => {
+  const newBlog = {
+    author: 'Compayaso',
+    likes: 66
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
   
-    const blogsAtEnd = await helper.blogsInDb()
+
+  test('a specific blog is within the returned blogs', async () => {
+    const response = await api.get('/api/blogs')
   
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  
+    const contents = response.body.map(r => r.title)
+    expect(contents).toContain(
+      'Deep Work'
+    )
   })
+
+  
+
+  
 
   test('a specific blog can be viewed', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -112,24 +150,6 @@ test('all blogs are returned', async () => {
     expect(contents).not.toContain(blogToDelete.title)
   })
 
-// test('blogs are returned as json', async () => {
-//   await api
-//     .get('/api/blogs')
-//     .expect(200)
-//     .expect('Content-Type', /application\/json/)
-// }, 100000)
-
-// test('there are two blogs', async () => {
-//     const response = await api.get('/api/blogs')
-  
-//     expect(response.body).toHaveLength(2)
-//   })
-  
-//   test('the first blog is about HTTP methods', async () => {
-//     const response = await api.get('/api/blogs')
-  
-//     expect(response.body[0].content).toBe('HTML is easy')
-//   })
 
 afterAll(() => {
   mongoose.connection.close()
