@@ -109,9 +109,6 @@ test('blog without title and url is not added', async () => {
     )
   })
 
-  
-
-  
 
   test('a specific blog can be viewed', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -130,6 +127,7 @@ test('blog without title and url is not added', async () => {
     expect(resultBlog.body).toEqual(processedBlogToView)
   })
   
+  //excercise 4.13
   test('a blog can be deleted', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
