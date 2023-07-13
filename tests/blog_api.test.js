@@ -188,7 +188,7 @@ test('blog without title and url is not added', async () => {
       const newUser = {
         username: 'root',
         name: 'Superuser',
-        password: 'salainen',
+        password: 'salainen'
       }
   
       const result = await api
