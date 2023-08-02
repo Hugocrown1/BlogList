@@ -37,7 +37,7 @@ blogsRouter.post('/', userExtractor, async (request, response, next) => {
 
   blogsRouter.get('/:id', async (request, response, next) => {
     
-      const blog = await Blog.findById(request.params.id)
+      const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1})
       if (blog) {
         response.json(blog)
       } else {
@@ -77,7 +77,7 @@ blogsRouter.post('/', userExtractor, async (request, response, next) => {
     }
 
     
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {new: true, runValidators: true})
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {new: true, runValidators: true}).populate('user', { username: 1, name: 1})
     response.json(updatedBlog)
   })
 
